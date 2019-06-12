@@ -1,0 +1,53 @@
+samples/falserecipient/pickowngames_2018_1212.wasm        No Vul1.
+samples/falserecipient/pickowngames_2019_0127.wasm        No Vul1.
+samples/falserecipient/gambeosadmin_2019_0121.wasm        Vul1! false eos transfer!
+samples/falserecipient/gambeosadmin_2019_0412.wasm        No Vul1.
+samples/falserecipient/nkpaymentcap_2018_1229.wasm        Vul1! false eos transfer! #52     #62
+samples/falserecipient/nkpaymentcap_2019_0314.wasm        Vul1! false eos transfer! #55     #76
+samples/falserecipient/epsdcclassic_2018_1206.wasm        Vul1! false eos transfer! #56     #56
+samples/falserecipient/epsdcclassic_2019_0214.wasm        Vul1! false eos transfer! #56     #56
+samples/falseos/xlotoioeosio_2019_0226.wasm        Vul2! transfer false receipiet!  #52
+samples/falseos/xlotoioeosio_2019_0415.wasm        No Vul2.
+samples/falseos/eoslotsystem_2018_1228.wasm        No Vul2.
+samples/falseos/eoslotsystem_2019_0321.wasm        No Vul2.
+samples/falseos/eoscastdmgb1_2018_1030.wasm        No Vul2.
+samples/falseos/eoscastdmgb1_2019_0528.wasm        No Vul2.
+samples/falseos/xlotoioeosio_2019_0226.wasm        Vul1! false eos transfer!
+samples/falseos/xlotoioeosio_2019_0415.wasm        No Vul1.
+samples/falseos/eoslotsystem_2018_1228.wasm        Vul1! false eos transfer!
+samples/falseos/eoslotsystem_2019_0321.wasm        No Vul1.
+samples/falseos/eoscastdmgb1_2018_1030.wasm        Vul1! false eos transfer!
+samples/falseos/eoscastdmgb1_2019_0528.wasm        No Vul1.
+samples/falserecipient/pickowngames_2018_1212.wasm        No Vul2.
+samples/falserecipient/gambeosadmin_2019_0412.wasm        No Vul2.
+samples/falserecipient/nkpaymentcap_2018_1229.wasm        Vul2! transfer false receipiet!
+samples/falserecipient/nkpaymentcap_2019_0314.wasm        No Vul2.
+samples/falserecipient/epsdcclassic_2018_1206.wasm        Vul2! transfer false receipiet!
+samples/falseos/xlotoioeosio_2019_0226.wasm        Vul1! false eos transfer!
+samples/falseos/xlotoioeosio_2019_0415.wasm        No Vul1.
+samples/falseos/eoslotsystem_2018_1228.wasm        Vul1! false eos transfer!
+samples/falseos/eoslotsystem_2019_0321.wasm        No Vul1.
+samples/falseos/eoscastdmgb1_2018_1030.wasm        Vul1! false eos transfer!
+samples/falseos/eoscastdmgb1_2019_0528.wasm        No Vul1.
+samples/falserecipient/pickowngames_2018_1212.wasm        No Vul2.
+samples/falserecipient/pickowngames_2019_0127.wasm        No Vul2.
+samples/falserecipient/gambeosadmin_2019_0121.wasm        No Vul2.
+samples/falserecipient/gambeosadmin_2019_0412.wasm        No Vul2.
+samples/falserecipient/nkpaymentcap_2018_1229.wasm        Vul2! transfer false receipiet!
+samples/falserecipient/nkpaymentcap_2019_0314.wasm        No Vul2.
+samples/falserecipient/epsdcclassic_2018_1206.wasm        Vul2! transfer false receipiet!
+samples/falserecipient/epsdcclassic_2019_0214.wasm        No Vul2.
+samples/falseos/xlotoioeosio_2019_0226.wasm        Vul1! false eos transfer!
+samples/falseos/xlotoioeosio_2019_0415.wasm        No Vul1.
+samples/falseos/eoslotsystem_2018_1228.wasm        Vul1! false eos transfer!
+samples/falseos/eoslotsystem_2019_0321.wasm        No Vul1.
+samples/falseos/eoscastdmgb1_2018_1030.wasm        Vul1! false eos transfer!
+samples/falseos/eoscastdmgb1_2019_0528.wasm        No Vul1.
+samples/falserecipient/pickowngames_2018_1212.wasm        No Vul2.
+samples/falserecipient/pickowngames_2019_0127.wasm        No Vul2.
+samples/falserecipient/gambeosadmin_2019_0121.wasm        No Vul2.
+samples/falserecipient/gambeosadmin_2019_0412.wasm        No Vul2.
+samples/falserecipient/nkpaymentcap_2018_1229.wasm        Vul2! transfer false receipiet!
+samples/falserecipient/nkpaymentcap_2019_0314.wasm        No Vul2.
+samples/falserecipient/epsdcclassic_2018_1206.wasm        Vul2! transfer false receipiet!
+samples/falserecipient/epsdcclassic_2019_0214.wasm        No Vul2.
