@@ -26,7 +26,7 @@ def usage():
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'i:t:h', ['input', 'type', 'help'])
+        opts, args = getopt.getopt(sys.argv[1:], 'i:t:ho:', ['input', 'type', 'help', 'output'])
     except getopt.GetoptError:
         usage()
         sys.exit()
@@ -38,6 +38,8 @@ def main(argv):
             file_name = arg
         elif opt in ['-t', '--type']:
             vul_type = arg
+        elif opt in ['-o', 'output']:
+            output_file = arg
         else:
             print("Error: invalid parameters")
             usage()
@@ -45,11 +47,11 @@ def main(argv):
 
     print("Detector start!")
     print(file_name, vul_type)
-    EOSVuldetect(file_name, vul_type)
+    EOSVuldetect(file_name, vul_type, output_file)
     print("")
 
 
-def EOSVuldetect(file_name, vul_type):
+def EOSVuldetect(file_name, vul_type, output_file):
     with open(file_name, 'rb') as f:
         raw = f.read()
     cfg = EosCFG(raw)
@@ -230,11 +232,11 @@ def EOSVuldetect(file_name, vul_type):
 
         if Vul1:
             print("Vul1! false eos transfer!")
-            f = open("log/list_results.txt", "a")
+            f = open("log/" + output_file, "a")
             f.write(file_name + "        " + "Vul1! false eos transfer!\n")
         else:
             print("No Vul1.")
-            f = open("log/list_results.txt", "a")
+            f = open("log/" + output_file, "a")
             f.write(file_name + "        " + "No Vul1.\n")
 
         f.close()
@@ -370,11 +372,11 @@ def EOSVuldetect(file_name, vul_type):
         print("######result########")
         if Vul2:
             print("Vul2! transfer false receipiet!")
-            f = open("log/list_results.txt", "a")
+            f = open("log/" + output_file, "a")
             f.write(file_name + "        " + "Vul2! transfer false receipiet!\n")
         else:
             print("No Vul2.")
-            f = open("log/list_results.txt", "a")
+            f = open("log/" + output_file, "a")
             f.write(file_name + "        " + "No Vul2.\n")
         f.close()
         print("######result########")
