@@ -68,7 +68,7 @@ def gen_func_graph_params(cfg, f_name):
     return f_blocks, f_edges, g_nodes, g_edges
 
 
-def get_conditional_edges(func_edges, func_blocks): #return edges name
+def get_conditional_edges(func_edges, func_blocks, assert_idx, cfg, dataSec): #return edges name
     edges_eosio_token_false = func_edges.copy()  # $local_1: code != eosio.token
     edges_eosio_token_true = func_edges.copy()
     edges_transfer_true = func_edges.copy()  # $local_2: action == transfer
@@ -79,18 +79,49 @@ def get_conditional_edges(func_edges, func_blocks): #return edges name
         # block_to = list(b for b in t_blocks if b.name == e.node_to)[0]
         last_instr = block_from.end_instr
         instrs = block_from.instructions
+        str_instrs = list(str(i) for i in instrs)
+        
+        for i in range(len(str_instrs)):
+            if str_instrs[i] == "call " + str(assert_idx):
+                if instrs[i - 1].name in ["i32.const", "i64.const"]:
+                    if "get_local 1" in [str_instrs[i-3], str_instrs[i-4]]:
+                        if "i64.const 6138663591592764928" in [str_instrs[i-3], str_instrs[i-4]]:
+                            edges_eosio_token_false.remove(e)
+                        elif "get_local 7" in [str_instrs[i-3], str_instrs[i-4]]:
+                            if isGetBase32From("eosio.token", instrs[i].offset, cfg, dataSec):
+                                edges_eosio_token_false.remove(e)
 
+                    elif "get_local 2" in [str_instrs[i-3], str_instrs[i-4]]:
+                        if "i64.const -3617168760277827584" in [str_instrs[i-3], str_instrs[i-4]]:
+                            edges_transfer_false.remove(e)
+                        elif "get_local 7" in [str_instrs[i-3], str_instrs[i-4]]:
+                            if isGetBase32From("transfer", instrs[i].offset, cfg, dataSec):
+                                edges_transfer_false.remove(e)
+
+                    elif instrs[i - 2].name == "get_local":
+                        if isGetEqualResultfrom("get_local 1", "eosio.token", cfg, instrs[i - 2], dataSec):
+                            pass
+
+
+        
         if last_instr.is_branch_conditional:
             if last_instr.name == "br_if":
                 if instrs[-2].name == "i64.eq":
                     # $local_1: code
                     if "get_local 1" in (str(instrs[-3]), str(instrs[-4])):
                         # code = "eosio.token"
-                        if "i64.const 6138663591592764928" in (str(instrs[-3]), str(instrs[-4])):
+                        if "i64.const 6138663591592764928"  in (str(instrs[-3]), str(instrs[-4])):
                             if e in edges_eosio_token_true and e.type == EDGE_CONDITIONAL_FALSE:
                                 edges_eosio_token_true.remove(e)
                             if e in edges_eosio_token_false and e.type == EDGE_CONDITIONAL_TRUE:
                                 edges_eosio_token_false.remove(e)
+                        elif "get_local 7" in (str(instrs[-3]), str(instrs[-4])):
+                            if isGetBase32From("eosio.token", last_instr.offset, cfg, dataSec):
+                                if e in edges_eosio_token_true and e.type == EDGE_CONDITIONAL_FALSE:
+                                    edges_eosio_token_true.remove(e)
+                                if e in edges_eosio_token_false and e.type == EDGE_CONDITIONAL_TRUE:
+                                    edges_eosio_token_false.remove(e)
+
                         # code = "something else" and "something else" != receiver
                         elif "i64.const" in (instrs[-3].name, instrs[-4].name) or "get_local" in (instrs[-3].name, instrs[-4].name)\
                                 and "get_local 0" not in (str(instrs[-3]), str(instrs[-4])):
@@ -101,11 +132,17 @@ def get_conditional_edges(func_edges, func_blocks): #return edges name
                     # $local_2: action
                     elif "get_local 2" in (str(instrs[-3]), str(instrs[-4])):
                         # action = "transfer"
-                        if "i64.const -3617168760277827584" in (str(instrs[-3]), str(instrs[-4])):
+                        if "i64.const -3617168760277827584"  in (str(instrs[-3]), str(instrs[-4])):
                             if e in edges_transfer_false and e.type == EDGE_CONDITIONAL_TRUE:
                                 edges_transfer_false.remove(e)
                             if e in edges_transfer_true and e.type == EDGE_CONDITIONAL_FALSE:
                                 edges_transfer_true.remove(e)
+                        elif "get_local 7" in (str(instrs[-3]), str(instrs[-4])):
+                            if isGetBase32From("transfer", last_instr.offset, cfg, dataSec):
+                                if e in edges_transfer_false and e.type == EDGE_CONDITIONAL_TRUE:
+                                    edges_transfer_false.remove(e)
+                                if e in edges_transfer_true and e.type == EDGE_CONDITIONAL_FALSE:
+                                    edges_transfer_true.remove(e)
                         # action = "something else"
                         elif "i64.const" in (instrs[-3].name, instrs[-4].name):
                             if e in edges_transfer_true and e.type == EDGE_CONDITIONAL_TRUE:
@@ -114,11 +151,18 @@ def get_conditional_edges(func_edges, func_blocks): #return edges name
                     # $local_1 : code
                     if "get_local 1" in (str(instrs[-3]), str(instrs[-4])):
                         # code != "eosio.token"
-                        if "i64.const 6138663591592764928" in (str(instrs[-3]), str(instrs[-4])):
+                        if "i64.const 6138663591592764928"  in (str(instrs[-3]), str(instrs[-4])):
+                            print("2" + str(instrs[-3]) + str(instrs[-4]))
                             if e in edges_eosio_token_true and e.type == EDGE_CONDITIONAL_TRUE:
                                 edges_eosio_token_true.remove(e)
                             if e in edges_eosio_token_false and e.type == EDGE_CONDITIONAL_FALSE:
                                 edges_eosio_token_false.remove(e)
+                        elif "get_local 7" in (str(instrs[-3]), str(instrs[-4])):
+                            if isGetBase32From("eosio.token", last_instr.offset, cfg, dataSec):
+                                if e in edges_eosio_token_true and e.type == EDGE_CONDITIONAL_TRUE:
+                                    edges_eosio_token_true.remove(e)
+                                if e in edges_eosio_token_false and e.type == EDGE_CONDITIONAL_FALSE:
+                                    edges_eosio_token_false.remove(e)
                         # code != "something else" and "something else" != receiver
                         elif "i64.const" in (instrs[-3].name, instrs[-4].name) or "get_local" in (instrs[-3].name, instrs[-4].name) \
                                 and "get_local 0" not in (str(instrs[-3]), str(instrs[-4])):
@@ -129,11 +173,21 @@ def get_conditional_edges(func_edges, func_blocks): #return edges name
                     # $local_2 : action
                     elif "get_local 2" in (str(instrs[-3]), str(instrs[-4])):
                         # action != "transfer"
-                        if "i64.const -3617168760277827584" in (str(instrs[-3]), str(instrs[-4])):
+                        if "i64.const -3617168760277827584"  in (str(instrs[-3]), str(instrs[-4])):
                             if e in edges_transfer_true and e.type == EDGE_CONDITIONAL_TRUE:
                                 edges_transfer_true.remove(e)
                             if e in edges_transfer_false and e.type == EDGE_CONDITIONAL_FALSE:
                                 edges_transfer_false.remove(e)
+                        elif "get_local 7" in (str(instrs[-3]), str(instrs[-4])):
+                            if isGetBase32From("transfer", last_instr.offset, cfg, dataSec):
+                                if e in edges_transfer_true and e.type == EDGE_CONDITIONAL_TRUE:
+                                    edges_transfer_true.remove(e)
+                                if e in edges_transfer_false and e.type == EDGE_CONDITIONAL_FALSE:
+                                    edges_transfer_false.remove(e)
+                            else:#action = "something else"
+                                if e in edges_transfer_true and e.type == EDGE_CONDITIONAL_FALSE:
+                                    edges_transfer_true.remove(e)
+
                         # action != "something else"
                         elif "i64.const" in (instrs[-3].name, instrs[-4].name):
                             if e in edges_transfer_true and e.type == EDGE_CONDITIONAL_FALSE:
@@ -220,3 +274,49 @@ def isGetSelf(instr, func_name, cfg):
             # print(hex(instr.offset), hex(func_instrs[i].offset), func_instrs[i] == instr)
             break
     return False
+
+def isGetEqualResultfrom(apply_op, source_str, cfg, instr, dataSec):
+    localVarId = instr.operand_interpretation.split(" ")[-1]
+    print(localVarId)
+    func_instrs = list(f.instructions for f in cfg.functions if f.name == "apply")[0]
+    for i in range(0, len(func_instrs)):
+        if instr.offset <= func_instrs[i].offset:
+            break
+        if "set_local " + localVarId == func_instrs[i].operand_interpretation \
+                or "tee_local " + localVarId == func_instrs[i].operand_interpretation:
+                if str(func_instrs[i - 1]) == "i64.eq" and apply_op in (str(func_instrs[i - 2]), str(func_instrs[i - 3])):
+                    if "get_local 7" in (str(func_instrs[i - 2]), str(func_instrs[i - 3])):
+                        print(source_str, func_instrs[i].offset)
+                        if isGetBase32From(source_str, func_instrs[i].offset, cfg, dataSec):
+                            print("ture get eosio.tojen")
+
+
+def isGetBase32From(string, offset, cfg, dataSec):
+    # offset is likely to be the end of base32 encoding.
+    # this function will trace back to search which string is encoded.
+    func_instrs = list(f.instructions for f in cfg.functions if f.name == "apply")[0]
+    for i in range(0, len(func_instrs)):
+        if offset <= func_instrs[i].offset:
+            break
+        # find the pattern:
+        #   i32.const 16
+        #   set_local 4
+        #   i64.const 0
+        #   set_local 7
+        if func_instrs[i].name == "i32.const" and \
+        func_instrs[i + 1].operand_interpretation == "set_local 4" and \
+        func_instrs[i + 2].operand_interpretation == "i64.const 0" and \
+        func_instrs[i + 3].operand_interpretation == "set_local 7":
+            encodingStrId = func_instrs[i].operand_interpretation.split(" ")[1]
+            # print(offset, encodingStrId, dataSec[encodingStrId])
+    
+    b_str = string.encode()
+    if dataSec[encodingStrId] == b_str + b'\x00':
+        # print(string)
+        return True
+
+
+
+
+
+

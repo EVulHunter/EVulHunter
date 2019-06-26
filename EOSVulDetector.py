@@ -9,17 +9,21 @@ from octopus.core.edge \
 from myhelper.graph import Graph
 from myhelper.tools import *
 from myhelper.wasmvm import *
-
+from myhelper.test import initDataSec
 
 # logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 def usage():
     print(
         '''
-        usage: python3 EOSVulDetector.py -i|--input <FILEPATH> -t|--type <VUL TYPE>
-        VUL TYPE:
-        1   FALSE EOS TRANSFER
-        2   FALSE RECEIPT TRANSFER
+        usage: python3 EOSVulDetector.py -i|--input <FILEPATH> -t|--type <VUL_TYPE> -o|--output <OUTPUT_FILENAME>
+        
+        VUL_TYPE:
+        1   Fake EOS
+        2   Fake Transfer Receipt
+        
+        OUTPUT FILE PATH:
+        ./log/OUTPUT_FILENAME
         '''
     )
 
@@ -38,7 +42,7 @@ def main(argv):
             file_name = arg
         elif opt in ['-t', '--type']:
             vul_type = arg
-        elif opt in ['-o', 'output']:
+        elif opt in ['-o', '--output']:
             output_file = arg
         else:
             print("Error: invalid parameters")
@@ -52,6 +56,8 @@ def main(argv):
 
 
 def EOSVuldetect(file_name, vul_type, output_file):
+    dataSec = initDataSec(file_name)
+    # print(dataSec)
     with open(file_name, 'rb') as f:
         raw = f.read()
     cfg = EosCFG(raw)
@@ -73,48 +79,16 @@ def EOSVuldetect(file_name, vul_type, output_file):
             send_deferred_idx = func_map.index(f)
         if f[0] == "eosio_assert":
             assert_idx = func_map.index(f)
-    print("the index of send_inline is ", send_inline_idx)
-    print("the index of send_deferred is ", send_deferred_idx)
+    # print("the index of send_inline is ", send_inline_idx)
+    # print("the index of send_deferred is ", send_deferred_idx)
     print("the index of eosio_assert is ", assert_idx)
 
     apply_args = [0, 6138663591592764928, -3617168760277827584]
 
-    # get blocks graph of apply func
-
-    # get all possible paths in the above graph
-
-    # get only the relevant paths
-
-    # get the graph of all the functions
-
-    # get all paths in the above graph, where the start is apply and the terminal is indirect call
-
-    # get the focused f(s)
-
-    # trace the blocks, get the indirect_call func idx (my-f)
-
-    # get blocks graph of my-f
-
-    # get all possible paths in my-f
-
-    # trace all possible paths
-
-    # if send_inline exists, get the para
-
-    # ======================================================#
-    # get blocks graph in apply func
-
-    # apply_paths = get_func_paths(cfg, "apply")
-
-    # get only the relevant paths
-    # for p in paths:
-    #     logging.debug("path")
-    #     for b in p:
-    #         logging.debug(b)
     func_apply_blocks, func_apply_edges = gen_f_param(cfg, "apply")
 
     edges_eosio_token_false, edges_eosio_token_true, edges_transfer_true, edges_transfer_false \
-        = get_conditional_edges(func_apply_edges, func_apply_blocks)
+        = get_conditional_edges(func_apply_edges, func_apply_blocks, assert_idx, cfg, dataSec)
 
     # print(len(func_apply_edges))
     # =======================================================#
@@ -124,10 +98,10 @@ def EOSVuldetect(file_name, vul_type, output_file):
     C1_edges = get_common_edges(edges_eosio_token_false, edges_transfer_true)
     C2_edges = get_common_edges(edges_eosio_token_true, edges_transfer_true)
 
-    print("eosio token false: ", len(edges_eosio_token_false))
-    print("eosio token true: ", len(edges_eosio_token_true))
-    print("action true: ", len(edges_transfer_true))
-    print("action false: ", len(edges_transfer_false))
+    # print("eosio token false: ", len(edges_eosio_token_false))
+    # print("eosio token true: ", len(edges_eosio_token_true))
+    # print("action true: ", len(edges_transfer_true))
+    # print("action false: ", len(edges_transfer_false))
     # print("eosio token common: ", len(get_common_edges(edges_eosio_token_true, edges_eosio_token_false)))
     # print("C1, C2 edges gotton!")
     graph_apply_nodes, graph_C1_edges = gen_g_param(func_apply_blocks, C1_edges)
@@ -143,9 +117,11 @@ def EOSVuldetect(file_name, vul_type, output_file):
 
     # print("C2 graph created!")
 
-    print("common c1 and c2 edges:", len(get_common_edges(graph_C1_edges, graph_C2_edges)))
+    # print("common c1 and c2 edges:", len(get_common_edges(graph_C1_edges, graph_C2_edges)))
     C2_paths = graph_C2.depth_first_search_path(graph_apply_nodes[0], graph_apply_nodes[-1])
     print("C2 paths searched!", len(C2_paths))
+    # f_paths = open("paths_number.txt", "a")
+    # f_paths.write(str(len(C1_paths)) + "        " + str(len(C2_paths)) + "\n")
 
     # get all possible paths in the above graph
 
@@ -175,7 +151,7 @@ def EOSVuldetect(file_name, vul_type, output_file):
     # get all paths in the above graph, where the start is apply and the terminal is indirect call target
     apply_idx = list(f[0] for f in func_map).index("apply")
     paths_indirect_call = graph_funcs.depth_first_search_path(apply_idx, N_FUNCS)
-    print("indirect call: ", paths_indirect_call)  # blocks name
+    # print("indirect call: ", paths_indirect_call)  # blocks name
 
     # get the focused f(s)
     focus_funcs = []
@@ -231,9 +207,9 @@ def EOSVuldetect(file_name, vul_type, output_file):
         print("######result########")
 
         if Vul1:
-            print("Vul1! false eos transfer!")
+            print("Vul1! fake eos transfer!")
             f = open("log/" + output_file, "a")
-            f.write(file_name + "        " + "Vul1! false eos transfer!\n")
+            f.write(file_name + "        " + "Vul1! fake eos transfer!\n")
         else:
             print("No Vul1.")
             f = open("log/" + output_file, "a")
@@ -371,9 +347,9 @@ def EOSVuldetect(file_name, vul_type, output_file):
 
         print("######result########")
         if Vul2:
-            print("Vul2! transfer false receipiet!")
+            print("Vul2! fake transfer notice!")
             f = open("log/" + output_file, "a")
-            f.write(file_name + "        " + "Vul2! transfer false receipiet!\n")
+            f.write(file_name + "        " + "Vul2! fake transfer notice!\n")
         else:
             print("No Vul2.")
             f = open("log/" + output_file, "a")
