@@ -1,3 +1,5 @@
 notes.txt
 myhelper/__pycache__/*
 log/*
+myhelper/wasm/wasm/__pycache__/*
+myhelper/wasm/__pycache__/*
