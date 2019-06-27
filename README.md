@@ -84,7 +84,7 @@ Assistant/EosParkData/eosbetdice11_2018-10-26T23:57:55_23706016.wasm        No V
 
 - ``./Assistant`` [directory](https://github.com/EVulHunter/EVulHunter/tree/master/Assistant): A python sript used to fetch binary data from EosPark.
 
-- ``./myhelper/wasm`` directory:
+- ``./myhelper/wasm`` directory: It is modified from [this project](https://github.com/athre0z/wasm), in order to solve the problem about getting the offset of data section in wasm module. (Notes: It's a temporary solution. Better solution wip)
 
 ## More Details
 
