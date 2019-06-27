@@ -1,3 +1,0 @@
-[submodule "myhelper/wasm"]
-	path = myhelper/wasm
-	url = git@github.com:athre0z/wasm.git
