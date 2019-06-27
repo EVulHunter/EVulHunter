@@ -38,6 +38,7 @@ def main(argv):
     for opt, arg in opts:
         if opt in ['-h', '--help']:
             usage()
+            sys.exit()
         elif opt in ['-i', '--input']:
             file_name = arg
         elif opt in ['-t', '--type']:
