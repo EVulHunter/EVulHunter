@@ -18,22 +18,22 @@ EVulHunter supports two types of vulnerability detection for now: **Fake EOS Tra
 - install [Octopus](https://github.com/quoscient/octopus) project first.
 
 ### Run Test Data
-1. 
+ 
 ```
-git clone git@github.com:EVulHunter/EVulHunter.git
+$ git clone git@github.com:EVulHunter/EVulHunter.git
+
+$ cd ./EVulHunter
+
+$ mkdir ./log
+
+$ chmod +x ./EosParkData_test.sh
+
+$ ./EosParkData_test.sh
 ```
 
-2.
-```
-chmod +x ./EosParkData_test.sh
-``` 
+After running these commands, a file named ``EosParkDataResult.txt`` will be generated in the ``./log/`` directory, containing the final detection results. Also a file named ``time.txt`` will be generated, suggesting the execution time of each detection.
 
-3.
-```
-./EosParkData_test.sh
-```
-
-The description of test data is [here]().
+The description of test data is [here](https://github.com/EVulHunter/EVulHunter#description-of-test-data).
 
 ### Analyze your own contract
 
@@ -75,7 +75,9 @@ No Vul2.
 ######result########
 
 ```
-Also, a file named ``test.txt`` will be generated in the ``./EVulHunter`` directory. In this file, the content will be like:
+The description of the output is [here](https://github.com/EVulHunter/EVulHunter#description-of-output).
+
+Also, a file named ``test.txt`` will be generated in the ``./log`` directory. In this file, the content will be like:
 ```
 Assistant/EosParkData/eosbetdice11_2018-10-26T23:57:55_23706016.wasm        No Vul2.
 ```
@@ -89,3 +91,5 @@ Assistant/EosParkData/eosbetdice11_2018-10-26T23:57:55_23706016.wasm        No V
 ## More Details
 
 ### Description of Test Data
+
+### Description of Output
