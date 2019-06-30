@@ -64,7 +64,7 @@ def decode_module(module, decode_name_subsections=False):
             # print(data_bytes)
 
             for idx, entry in enumerate(sec_data.payload.entries):
-                const_idx = data_bytes.index(entry.data.tobytes())
+                const_idx = data_bytes[const_idx:].index(entry.data.tobytes()) + const_idx
                 # print(const_idx)
                 sec_data_tmp = data_bytes[:const_idx]
                 const_start_idx = 0
