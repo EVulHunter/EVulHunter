@@ -86,10 +86,19 @@ Assistant/EosParkData/eosbetdice11_2018-10-26T23:57:55_23706016.wasm        No V
 
 - ``./Assistant`` [directory](https://github.com/EVulHunter/EVulHunter/tree/master/Assistant): A python sript used to fetch binary data from EosPark.
 
-- ``./myhelper/wasm`` directory: It is modified from [this project](https://github.com/athre0z/wasm), in order to solve the problem about getting the offset of data section in wasm module. (Notes: It's a temporary solution. Better solution wip)
-
+- ``./myhelper/`` [directory](https://github.com/EVulHunter/EVulHunter/tree/master/myhelper): Some components of the EVulHunter.
 ## More Details
 
 ### Description of Test Data
+The sample codes choosed to test are from the list [known dapp attacks](https://github.com/peckshield/EOS/tree/master/known_dapp_attacks). Specifically, in this list, in case of **Fake EOS Transfer** vulnerability, the dapp ``EOSBet, ...`` are selected as our samples; in case of **Fake EOS Notice** vulnerability, the dapp ``EOSBet, ...`` are selected. According to the [DappRadar](https://dappradar.com/), we can get a mapping between dapp name and its relevant contract account name. With the contract names, we fetch all history version (until 2019/6/12) WebAssembly codes from [EosPark](https://eospark.com/), which are our finally samples to analyze, in ``./Assistant/EosParkData`` directory. 
 
 ### Description of Output
+
+The final detection result is shown in the following wrapper:
+```
+######result########
+...
+######result########
+```
+Besides, 
+``in C2,  [49] is the target func to be called: `` , this line means the $func49 is eventually detected as the ``transfer`` function in the contract.

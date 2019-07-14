@@ -9,7 +9,7 @@ from octopus.core.edge \
 from myhelper.graph import Graph
 from myhelper.tools import *
 from myhelper.wasmvm import *
-from myhelper.test import initDataSec
+from myhelper.dataInit import initDataSec
 
 # logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
