@@ -7,10 +7,6 @@ EVulHunter is a binary-level vulnerability detector for EOS smart contracts, whi
 
 EVulHunter supports two types of vulnerability detection for now: **Fake EOS Transfer** and **Fake Transfer Notice**. 
 
-- A video illustration: https://youtu.be/5SJ0ZJKVZvw
-
-- Paper related: https://arxiv.org/abs/1906.10362
-
 ## Run EVulHunter
 
 ### Dependencies
